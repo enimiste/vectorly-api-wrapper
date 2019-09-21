@@ -1,4 +1,4 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.impl;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import javax.crypto.SecretKey;
+
+import com.vectorly.api.rest.dto.SecuredUrl;
+import com.vectorly.api.rest.exception.VectorlyApiException;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +33,6 @@ class JWTSecuredUrlImpl {
 	public SecuredUrl generate(String videoId, LocalDateTime expiresAt) throws VectorlyApiException {
 		try {
 			String token = token(videoId, expiresAt.toEpochSecond(ZoneOffset.UTC));
-			System.out.println(token);
 			URL url = new URL(
 					String.format("%s/%s/token/%s", asString(baseUrl), URLEncoder.encode(videoId, "UTF-8"), token));
 			return new SecuredUrlImpl(url, token);

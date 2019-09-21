@@ -1,4 +1,4 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.dto;
 
 import java.net.URL;
 
@@ -17,9 +17,9 @@ public interface SecuredUrl {
 
 	/**
 	 * 
-	 * getUrl().toString()
+	 * Should be a shortcut to getUrl().toString()
 	 * 
-	 * @return the final url to be used to play the video
+	 * @return
 	 */
 	String toString();
 }

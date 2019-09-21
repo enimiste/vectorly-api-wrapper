@@ -1,4 +1,4 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -10,8 +10,11 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vectorly.api.rest.DownloadListener.Downloaded;
-import com.vectorly.api.rest.DownloadListener.Progress;
+import com.vectorly.api.rest.Download;
+import com.vectorly.api.rest.Download.DownloadListener.Downloaded;
+import com.vectorly.api.rest.Download.DownloadListener.Progress;
+import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
+import com.vectorly.api.rest.exception.VectorlyApiException;
 
 class DownloadImpl implements Download {
 
@@ -42,7 +45,7 @@ class DownloadImpl implements Download {
 	}
 
 	@Override
-	public void execute() throws VectorlyApiException {
+	public void execute() throws VectorlyApiAuthorizationException, VectorlyApiException {
 		HttpURLConnection con = null;
 		try {
 			con = (HttpURLConnection) url.openConnection();
@@ -53,8 +56,12 @@ class DownloadImpl implements Download {
 
 			int responseCode = con.getResponseCode();
 			if (!(responseCode >= 200 && responseCode < 300)) {
-				throw new VectorlyApiException(
-						"unexpected status code (" + responseCode + ") while connecting to " + url.toString());
+				if (responseCode == 403 || responseCode == 401)
+					throw new VectorlyApiAuthorizationException(
+							"unexpected status code (" + responseCode + ") while connecting to " + url.toString());
+				else
+					throw new VectorlyApiException(
+							"unexpected status code (" + responseCode + ") while connecting to " + url.toString());
 			}
 			long totalBytes = con.getHeaderFieldLong("Content-Length", 0);
 			InputStream in = con.getInputStream();
@@ -83,11 +90,13 @@ class DownloadImpl implements Download {
 				// ignore it
 			}
 			try {
-				Downloaded dw = new DownloadListener.Downloaded(outFile.toPath());
+				Downloaded dw = new Downloaded(outFile.toPath());
 				listeners.forEach(l -> l.onFinished(dw));
 			} catch (Exception e) {
 				// ignore any exception here
 			}
+		} catch (VectorlyApiAuthorizationException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new VectorlyApiException(e);
 		} finally {
@@ -99,6 +108,11 @@ class DownloadImpl implements Download {
 	@Override
 	public void addDownloadListener(DownloadListener listener) {
 		this.listeners.add(listener);
+	}
+
+	@Override
+	public String getVideoId() {
+		return videoId;
 	}
 
 }

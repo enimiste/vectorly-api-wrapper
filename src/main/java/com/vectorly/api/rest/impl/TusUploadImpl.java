@@ -1,4 +1,4 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +9,11 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vectorly.api.rest.UploadListener.Progress;
-import com.vectorly.api.rest.UploadListener.Uploaded;
+import com.vectorly.api.rest.Upload;
+import com.vectorly.api.rest.Upload.UploadListener.Progress;
+import com.vectorly.api.rest.Upload.UploadListener.Uploaded;
+import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
+import com.vectorly.api.rest.exception.VectorlyApiException;
 
 import io.tus.java.client.ProtocolException;
 import io.tus.java.client.TusClient;
@@ -54,7 +57,7 @@ class TusUploadImpl implements Upload {
 	}
 
 	@Override
-	public void execute() throws FileNotFoundException, VectorlyApiException {
+	public void execute() throws FileNotFoundException, VectorlyApiAuthorizationException, VectorlyApiException {
 		final TusUpload upload = new TusUpload(file);
 
 		if (customFileName != null) {
@@ -79,7 +82,7 @@ class TusUploadImpl implements Upload {
 					double progress = (double) bytesUploaded / totalBytes * 100;
 
 					try {
-						Progress p = new UploadListener.Progress(totalBytes, bytesUploaded, progress);
+						Progress p = new Progress(totalBytes, bytesUploaded, progress);
 						listeners.forEach(l -> l.onProgress(p));
 					} catch (Exception e) {
 						// ignore any exception here
@@ -91,7 +94,7 @@ class TusUploadImpl implements Upload {
 				try {
 					URL url = uploader.getUploadURL();
 					String uploadId = url.toString().split("\\+")[0];
-					Uploaded u = new UploadListener.Uploaded(uploadId, url);
+					Uploaded u = new Uploaded(uploadId, url);
 					listeners.forEach(l -> l.onFinished(u));
 				} catch (Exception e) {
 					// ignore any exception here
@@ -101,6 +104,16 @@ class TusUploadImpl implements Upload {
 		try {
 			executor.makeAttempts();
 		} catch (ProtocolException | IOException e) {
+			if (e instanceof ProtocolException) {
+				try {
+					int respCode = ((ProtocolException) e).getCausingConnection().getResponseCode();
+					if (respCode == 403 || respCode == 401) {
+						throw new VectorlyApiAuthorizationException(e);
+					}
+				} catch (IOException e1) {
+					// nothing
+				}
+			}
 			throw new VectorlyApiException(e);
 		}
 	}

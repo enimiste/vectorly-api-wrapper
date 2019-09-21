@@ -1,4 +1,4 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.exception;
 
 public class VectorlyApiException extends Exception {
 

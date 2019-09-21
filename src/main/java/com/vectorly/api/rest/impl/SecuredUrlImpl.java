@@ -1,6 +1,8 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.impl;
 
 import java.net.URL;
+
+import com.vectorly.api.rest.dto.SecuredUrl;
 
 class SecuredUrlImpl implements SecuredUrl {
 

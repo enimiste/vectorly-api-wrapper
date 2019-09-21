@@ -1,5 +1,11 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.exception;
 
+/**
+ * Thrown in case of Forbidden access or UnAuthorized access by the Vectorly Api
+ * 
+ * @author HP
+ *
+ */
 public class VectorlyApiAuthorizationException extends VectorlyApiException {
 
 	/**

@@ -1,7 +1,10 @@
-package com.vectorly.api.rest;
+package com.vectorly.api.rest.impl;
 
 import java.io.File;
 import java.net.URL;
+
+import com.vectorly.api.rest.Upload;
+import com.vectorly.api.rest.Uploader;
 
 import io.tus.java.client.TusClient;
 import io.tus.java.client.TusURLMemoryStore;
