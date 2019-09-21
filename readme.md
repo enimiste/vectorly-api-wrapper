@@ -2,9 +2,7 @@
 This implementation exposes only interfaces and  not the implementing classes;
 
 ## Version :
-Beta
-## TODO :
-- Get `AnalyticEvent` attributes from Vectorly team
+RC
 
 ## Features :
 - Create a `VectorlyRest` Facade object
@@ -171,7 +169,7 @@ public class Main {
 
 ```
 ## Entities :
-### Video :
+#### Video :
 ```java
 String id;
 String name;
@@ -181,7 +179,7 @@ VideoStatus status (READY, PROCESSING, ERROR, UNKNOWN);
 Boolean isPrivate;
 String clientId;
 ```
-### Summary and Detail :
+#### Summary and Detail :
 ```java
 LocalDateTime start;
 LocalDateTime end;
@@ -195,5 +193,21 @@ String videoId;
 String videoTitle;
 Integer playsCount;
 ```
+
+#### Analytics Event
+```java
+boolean isLiveStream;
+int sound;
+long totalLength;
+int position;
+String quality;
+String sessionId;
+String videoPlayer;
+isAdEnabled;
+String contentAssetId;
+isFullScreen;
+LocalDateTime timestamp;
+EventType type (VIDEO_SEEK, VIDEO_PAUSE, VIDEO_END, VIDEO_BUFFER_END, VIDEO_BUFFER_START, VIDEO_LOAD, UNKNOWN);
+```
 ## Credits :
-Vectorly Web Site
+Vectorly Team
