@@ -5,15 +5,15 @@ This implementation exposes only interfaces and  not the implementing classes;
 RC
 
 ## Features :
-- Create a `VectorlyRest` Facade object
+- Create a `VectorlyRest` Facade object using the API Key from your Dashboard
 - Upload a local file (You can set a custom name for it)
-- Fetch All videos (It returns a Java Stream)
-- Search Videos by keyword (It returns a Java Stream)
-- Download a video by `video id` and store it to a `File` destination
-- Download a video by `video id` and store it to an `OutputStream` (Maybe used with Http response output stream)
-- Videos analytics Summary
-- Fetch a stream of events related to videos analytics (It returns a Java Stream)
-- Create a secured URL to use with private videos (It uses JWT token internaly)
+- Fetch All videos (It returns a Java Stream<Video>)
+- Search Videos by keyword (It returns a Java Stream<Video>)
+- Download a video by `video id` and store it to a `File` destination folder
+- Download a video by `video id` and store it to an `OutputStream` (Maybe used with HTTP response output stream)
+- Fetch a stream of videos analytics Summary (It returns a Java Stream<Summary>)
+- Fetch a stream of events related to videos analytics (It returns a Java Stream<AnalyticsEvent>)
+- Create a secured URL to use with private videos (It uses JWT token internally)
 
 ## Dependencies :
 Java 8 or Later  
@@ -50,7 +50,6 @@ Java 8 or Later
 
 ## Example :
 ```java
-package com.vectorly.api.rest;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,6 +60,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vectorly.api.rest.*;
 import com.vectorly.api.rest.Download.DownloadListener;
 import com.vectorly.api.rest.DownloadStream.DownloadStreamListener;
 import com.vectorly.api.rest.Upload.UploadListener;
