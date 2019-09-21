@@ -1,5 +1,3 @@
-package com.vectorly.api.rest;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -12,6 +10,7 @@ import java.util.stream.Stream;
 import com.vectorly.api.rest.Download.DownloadListener;
 import com.vectorly.api.rest.DownloadStream.DownloadStreamListener;
 import com.vectorly.api.rest.Upload.UploadListener;
+import com.vectorly.api.rest.*;
 import com.vectorly.api.rest.dto.AnalyticsEvent;
 import com.vectorly.api.rest.dto.SecuredUrl;
 import com.vectorly.api.rest.dto.Summary;
