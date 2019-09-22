@@ -1,14 +1,12 @@
 package com.vectorly.api.rest.impl;
 
-import java.net.MalformedURLException;
-
 import com.vectorly.api.rest.VectorlyRest;
 import com.vectorly.api.rest.VectorlyRest.Configuration;
 
 /**
  * This is a facade class to get an implementation of the VectorlyRest interface
  * 
- * @author HP
+ * @author NOUNI EL Bachir
  *
  */
 public final class VectorlyRestBuilder {

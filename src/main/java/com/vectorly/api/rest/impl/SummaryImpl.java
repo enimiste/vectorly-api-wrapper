@@ -50,7 +50,7 @@ class SummaryImpl implements Summary {
 
 	/**
 	 * 
-	 * @author HP
+	 * @author NOUNI EL bachir
 	 *
 	 */
 	public static class DetailImpl implements Detail {
