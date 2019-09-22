@@ -2,17 +2,17 @@
 Only MP4 videos are supported for upload
 
 ## Version :
-RC
+RC1
 
 ## Features :
 - Create a `VectorlyRest` Facade object using the API Key from your Dashboard
 - Upload a local file (You can set a custom name for it)
-- Fetch All videos (It returns a Java Stream<Video>)
-- Search Videos by keyword (It returns a Java Stream<Video>)
+- Fetch All videos (It returns a Java Stream of Video)
+- Search Videos by keyword (It returns a Java Stream of Video)
 - Download a video by `video id` and store it to a `File` destination folder
 - Download a video by `video id` and store it to an `OutputStream` (Maybe used with HTTP response output stream)
-- Fetch a stream of videos analytics Summary (It returns a Java Stream<Summary>)
-- Fetch a stream of events related to videos analytics (It returns a Java Stream<AnalyticsEvent>)
+- Fetch a stream of videos analytics Summary (It returns a Java Stream of Summary)
+- Fetch a stream of events related to videos analytics (It returns a Java Stream of AnalyticsEvent)
 - Create a secured URL to use with private videos (It uses JWT token internally)
 
 ## Dependencies :
