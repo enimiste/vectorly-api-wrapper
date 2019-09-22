@@ -12,6 +12,7 @@ import java.util.Set;
 import com.vectorly.api.rest.Upload;
 import com.vectorly.api.rest.Upload.UploadListener.Progress;
 import com.vectorly.api.rest.Upload.UploadListener.Uploaded;
+import com.vectorly.api.rest.VectorlyRest.VideoType;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
 
@@ -21,7 +22,7 @@ import io.tus.java.client.TusExecutor;
 import io.tus.java.client.TusUpload;
 import io.tus.java.client.TusUploader;
 
-class TusUploadImpl implements Upload {
+class TusProtocolUploadImpl implements Upload {
 
 	final static String API_KEY = "api_key";
 	final static String FILENAME = "filename";
@@ -32,11 +33,13 @@ class TusUploadImpl implements Upload {
 	protected String customFileName = null;
 	protected File file;
 	protected Set<UploadListener> listeners;
+	protected VideoType fileType;// Http file type. Ex : "video/mp4"
 
-	public TusUploadImpl(TusClient tusClient, String apiKey, File file) {
+	public TusProtocolUploadImpl(TusClient tusClient, String apiKey, File file, VideoType fileType) {
 		this.apiKey = apiKey;
 		this.tusClient = tusClient;
 		this.file = file;
+		this.fileType = fileType;
 		this.listeners = new HashSet<>();
 	}
 
@@ -48,6 +51,11 @@ class TusUploadImpl implements Upload {
 		} catch (InvalidPathException e) {
 			throw new IllegalArgumentException(String.format("File name %s is invalid", fileName), e);
 		}
+		String p = file.toPath().toString();
+		String ext = p.substring(p.lastIndexOf("."), p.length());
+		if (!fileName.endsWith(ext))
+			throw new IllegalArgumentException("The custom name should have the same extension as the original file");
+
 		this.customFileName = fileName;
 	}
 
@@ -64,7 +72,7 @@ class TusUploadImpl implements Upload {
 			upload.getMetadata().put(FILENAME, customFileName);
 		}
 		upload.getMetadata().put(API_KEY, apiKey);
-		upload.getMetadata().put(FILETYPE, "video/mp4");
+		upload.getMetadata().put(FILETYPE, mimeType(fileType));
 
 		TusExecutor executor = new TusExecutor() {
 			@Override
@@ -115,6 +123,20 @@ class TusUploadImpl implements Upload {
 				}
 			}
 			throw new VectorlyApiException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param fileType
+	 * @return
+	 */
+	private String mimeType(VideoType fileType) {
+		switch (fileType) {
+		case VIDEO_MP4:
+			return "video/mp4";
+		default:
+			throw new IllegalArgumentException(fileType + " not supported");
 		}
 	}
 

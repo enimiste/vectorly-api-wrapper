@@ -1,5 +1,5 @@
 # Vectorly REST API Java Client
-This implementation exposes only interfaces and  not the implementing classes;
+Only MP4 videos are supported for upload
 
 ## Version :
 RC
@@ -71,12 +71,13 @@ import com.vectorly.api.rest.dto.Video;
 import com.vectorly.api.rest.dto.Video.VideoStatus;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
+import com.vectorly.api.rest.impl.VectorlyRestBuilder;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			VectorlyRest rest = VectorlyRest
+			VectorlyRest rest = VectorlyRestBuilder
 					.build("1ce9d977-7baa-4b98-be65-9135fff3164e");
 
 			// Uploading
@@ -176,6 +177,7 @@ String name;
 Long size;
 Long originalSize;
 VideoStatus status (READY, PROCESSING, ERROR, UNKNOWN);
+String rawStatus;//Raw status without mapping with the VideoStatus
 Boolean isPrivate;
 String clientId;
 ```
@@ -208,6 +210,7 @@ String contentAssetId;
 isFullScreen;
 LocalDateTime timestamp;
 EventType type (VIDEO_SEEK, VIDEO_PAUSE, VIDEO_END, VIDEO_BUFFER_END, VIDEO_BUFFER_START, VIDEO_LOAD, UNKNOWN);
+String rawType;//event type without mapping with the Enum EventType
 ```
 ## Credits :
 Vectorly Team

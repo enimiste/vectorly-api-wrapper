@@ -9,14 +9,16 @@ class VideoImpl implements Video {
 	protected Long size;
 	protected Long originalSize;
 	protected VideoStatus status;
+	protected String rawStatus;
 	protected Boolean isPrivate;
 	protected String clientId;
 
 	public VideoImpl(String id, VideoStatus status, String name, long size, long originalSize, String clientId,
-			boolean isPrivate) {
+			boolean isPrivate, String rawStatus) {
 		this.id = id;
 		this.name = name;
 		this.status = status;
+		this.rawStatus = rawStatus;
 		this.size = size;
 		this.originalSize = originalSize;
 		this.isPrivate = isPrivate;
@@ -57,6 +59,11 @@ class VideoImpl implements Video {
 	public String toString() {
 		return String.format(
 				"Video(id=%s, name=%s, status=%s, csize=%d Bytes, orsize=%d Bytes, private=%b, clientId=%s)", id, name,
-				status, size, originalSize, isPrivate, clientId);
+				(status == VideoStatus.UNKNOWN ? rawStatus : status), size, originalSize, isPrivate, clientId);
+	}
+
+	@Override
+	public String getRawType() {
+		return rawStatus;
 	}
 }

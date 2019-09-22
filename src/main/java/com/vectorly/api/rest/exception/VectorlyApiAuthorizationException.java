@@ -3,7 +3,7 @@ package com.vectorly.api.rest.exception;
 /**
  * Thrown in case of Forbidden access or UnAuthorized access by the Vectorly Api
  * 
- * @author HP
+ * @author NOUNI El Bachir
  *
  */
 public class VectorlyApiAuthorizationException extends VectorlyApiException {
@@ -11,7 +11,7 @@ public class VectorlyApiAuthorizationException extends VectorlyApiException {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4220246041864905215L;
+	private static final long serialVersionUID = 1L;
 
 	public VectorlyApiAuthorizationException(String message) {
 		super(message);

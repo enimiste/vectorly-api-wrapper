@@ -71,10 +71,20 @@ public interface AnalyticsEvent {
 	LocalDateTime getTimestamp();
 
 	/**
+	 * Returns the mapped value of the event with one of the {@see EventType} enum
+	 * If not listed in enums, this method returns {@see EventType.UNKNOWN}
+	 * To get the original raw value use {@see AnalyticsEvent.getRawType()} method
 	 * 
 	 * @return
 	 */
 	EventType getType();
+	
+	/**
+	 * Returns the original raw value of the event attribute received from Vectorly API
+	 * 
+	 * @return
+	 */
+	String getRawType();
 
 	/**
 	 * Event(type=%s, time=%s, videoId=%s, player=%s, liveStream=%b)
@@ -83,6 +93,6 @@ public interface AnalyticsEvent {
 	String toString();
 
 	public static enum EventType {
-		VIDEO_SEEK, VIDEO_PAUSE, VIDEO_END, VIDEO_BUFFER_END, VIDEO_BUFFER_START, VIDEO_LOAD, UNKNOWN
+		VIDEO_PLAY, VIDEO_SEEK, VIDEO_PAUSE, VIDEO_END, VIDEO_BUFFER_END, VIDEO_BUFFER_START, VIDEO_LOAD, UNKNOWN
 	}
 }

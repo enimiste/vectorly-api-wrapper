@@ -18,10 +18,11 @@ class AnalyticsEventImpl implements AnalyticsEvent {
 	boolean isFullScreen;
 	protected LocalDateTime timestamp;
 	protected EventType type;
-	
+	protected String rawType;
+
 	public AnalyticsEventImpl(boolean isLiveStream, int sound, long totalLength, int position, String quality,
 			String sessionId, String videoPlayer, boolean isAdEnabled, String contentAssetId, boolean isFullScreen,
-			LocalDateTime timestamp, EventType type) {
+			LocalDateTime timestamp, EventType type, String rawType) {
 		super();
 		this.isLiveStream = isLiveStream;
 		this.sound = sound;
@@ -35,6 +36,7 @@ class AnalyticsEventImpl implements AnalyticsEvent {
 		this.isFullScreen = isFullScreen;
 		this.timestamp = timestamp;
 		this.type = type;
+		this.rawType = rawType;
 	}
 
 	@Override
@@ -96,10 +98,16 @@ class AnalyticsEventImpl implements AnalyticsEvent {
 	public EventType getType() {
 		return type;
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("Event(type=%s, time=%s, videoId=%s, player=%s, liveStream=%b)", type, timestamp, contentAssetId, videoPlayer, isLiveStream);
+		return String.format("Event(type=%s, time=%s, videoId=%s, player=%s, liveStream=%b)",
+				(type == EventType.UNKNOWN ? rawType : type), timestamp, contentAssetId, videoPlayer, isLiveStream);
+	}
+
+	@Override
+	public String getRawType() {
+		return rawType;
 	}
 
 }

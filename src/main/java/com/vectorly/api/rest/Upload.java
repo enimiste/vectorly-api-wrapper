@@ -5,9 +5,16 @@ import java.net.URL;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
 
+/**
+ * 
+ * @author NOUNI EL bachir
+ *
+ */
 public interface Upload {
 
 	/**
+	 * Sets a custom name to be used to name the uploaded file on Vectorly Api
+	 * The fileName should include the same extension as the source file
 	 * 
 	 * @param fileName
 	 * @throws IllegalArgumentException if the file name is invalid

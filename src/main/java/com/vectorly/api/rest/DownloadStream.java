@@ -4,6 +4,14 @@ import java.io.OutputStream;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
 
+/**
+ * Download and pipe the bytes to an external OutputStream object
+ * 
+ * Here is where the download job will be done
+ * 
+ * @author NOUNI EL Bachir
+ *
+ */
 public interface DownloadStream {
 
 	void addDownloadListener(DownloadStreamListener downloadStreamListener);
@@ -20,7 +28,7 @@ public interface DownloadStream {
 
 	/**
 	 * 
-	 * @author HP
+	 * @author NOUNI EL Bachir
 	 *
 	 */
 	public static interface DownloadStreamListener {
@@ -37,7 +45,7 @@ public interface DownloadStream {
 
 		/**
 		 * 
-		 * @author HP
+		 * @author NOUNI EL Bachir
 		 *
 		 */
 		public static class Progress {

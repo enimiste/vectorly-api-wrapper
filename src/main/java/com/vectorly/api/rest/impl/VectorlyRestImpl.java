@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -31,34 +30,12 @@ import com.vectorly.api.rest.dto.Video.VideoStatus;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
 
-public class VectorlyRestImpl implements VectorlyRest {
-	final static String VIDEOS_LIST = "/list";
-	final static String VIDEOS_SEARCH = "/search/";
-	final static String VIDEOS_DOWNLOAD = "/download/";
-	final static String ANALYTICS_SUMMARY = "/summary/";
-	final static String ANALYTICS_EVENTS = "/events/video/";
-	final static String API_KEY_HEADER = "X-Api-Key";
+class VectorlyRestImpl implements VectorlyRest {
 
-	protected String apiKey;
-	protected boolean enableResuming;
-	protected URL apiUploadUrl;
-	protected URL apiUrl;
-	protected URL apiAnalyticsUrl;
+	protected Configuration config;
 
-	public VectorlyRestImpl(String apiKey, URL apiUploadUrl, URL apiUrl, URL apiAnalyticsUrl) {
-		this.apiKey = apiKey;
-		this.apiUploadUrl = apiUploadUrl;
-		this.apiUrl = apiUrl;
-		this.apiAnalyticsUrl = apiAnalyticsUrl;
-	}
-
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
-	private static String asString(URL url) {
-		return url.toString().replaceAll("/+$", "");
+	public VectorlyRestImpl(Configuration config) {
+		this.config = config;
 	}
 
 	/**
@@ -75,7 +52,7 @@ public class VectorlyRestImpl implements VectorlyRest {
 		try {
 			con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
-			con.setRequestProperty(API_KEY_HEADER, apiKey);
+			con.setRequestProperty(config.getApiKeyRequestHeader(), config.getApiKey());
 			con.setRequestProperty("Content-Type", "application/json");
 			con.connect();
 
@@ -117,8 +94,9 @@ public class VectorlyRestImpl implements VectorlyRest {
 		String id = json.getString("id");
 		String name = json.getString("name");
 		VideoStatus status = null;
+		String rawStatus = json.getString("status");
 		try {
-			status = VideoStatus.valueOf(json.getString("status").toUpperCase());
+			status = VideoStatus.valueOf(rawStatus.toUpperCase());
 		} catch (IllegalArgumentException e) {
 			// To avoid bloc code if we receive a not defined status
 			status = VideoStatus.UNKNOWN;
@@ -128,14 +106,14 @@ public class VectorlyRestImpl implements VectorlyRest {
 		long size = json.getLong("size");
 		String clientId = json.getString("client_id");
 
-		return new VideoImpl(id, status, name, size, originalSize, clientId, isPrivate);
+		return new VideoImpl(id, status, name, size, originalSize, clientId, isPrivate, rawStatus);
 	}
 
 	@Override
 	public Stream<Video> fetchAll() throws VectorlyApiAuthorizationException, VectorlyApiException {
 		try {
-			URL url = new URL(String.format("%s%s", asString(apiUrl), VIDEOS_LIST));
-			return httpCall(url, content -> {
+
+			return httpCall(config.getVideosListUrl(), content -> {
 				JSONArray jsonArr = new JSONArray(content);
 				Iterable<Object> itr = () -> jsonArr.iterator();
 				return StreamSupport.stream(itr.spliterator(), false).map(VectorlyRestImpl::videoFromJsonObject);
@@ -150,9 +128,8 @@ public class VectorlyRestImpl implements VectorlyRest {
 	@Override
 	public Stream<Video> search(String keyword) throws VectorlyApiAuthorizationException, VectorlyApiException {
 		try {
-			URL url = new URL(
-					String.format("%s%s%s", asString(apiUrl), VIDEOS_SEARCH, URLEncoder.encode(keyword, "UTF-8")));
-			return httpCall(url, content -> {
+
+			return httpCall(config.getVideosSearchUrl(keyword), content -> {
 				JSONArray jsonArr = new JSONArray(content);
 				Iterable<Object> itr = () -> jsonArr.iterator();
 				return StreamSupport.stream(itr.spliterator(), false).map(VectorlyRestImpl::videoFromJsonObject);
@@ -167,9 +144,7 @@ public class VectorlyRestImpl implements VectorlyRest {
 	@Override
 	public Download download(String videoId) throws VectorlyApiException {
 		try {
-			URL url = new URL(
-					String.format("%s%s%s", asString(apiUrl), VIDEOS_DOWNLOAD, URLEncoder.encode(videoId, "UTF-8")));
-			return new DownloadImpl(videoId, apiKey, url);
+			return new DownloadImpl(videoId, config.getApiKey(), config.getVideoDownloadUrl(videoId));
 		} catch (Exception e) {
 			throw new VectorlyApiException(e);
 		}
@@ -178,9 +153,7 @@ public class VectorlyRestImpl implements VectorlyRest {
 	@Override
 	public DownloadStream downloadAsStream(String videoId) throws VectorlyApiException {
 		try {
-			URL url = new URL(
-					String.format("%s%s%s", asString(apiUrl), VIDEOS_DOWNLOAD, URLEncoder.encode(videoId, "UTF-8")));
-			return new DownloadStreamImpl(videoId, apiKey, url);
+			return new DownloadStreamImpl(videoId, config.getApiKey(), config.getVideoDownloadUrl(videoId));
 		} catch (Exception e) {
 			throw new VectorlyApiException(e);
 		}
@@ -219,8 +192,7 @@ public class VectorlyRestImpl implements VectorlyRest {
 	@Override
 	public Stream<Summary> analyticsSummary() throws VectorlyApiAuthorizationException, VectorlyApiException {
 		try {
-			URL url = new URL(String.format("%s%s", asString(apiAnalyticsUrl), ANALYTICS_SUMMARY));
-			return httpCall(url, content -> {
+			return httpCall(config.getAnalyticsSummaryUrl(), content -> {
 				JSONArray jsonArr = new JSONArray(content);
 				Iterable<Object> itr = () -> jsonArr.iterator();
 				return StreamSupport.stream(itr.spliterator(), false).map(VectorlyRestImpl::summaryfromJsonObject);
@@ -251,25 +223,25 @@ public class VectorlyRestImpl implements VectorlyRest {
 		boolean isFullScreen = json.getBoolean("full_screen");
 		LocalDateTime timestamp = dateTimeFrom(json.getString("timestamp"));
 		EventType type = null;
+		String stype = null;
 		try {
-			String stype = json.getString("event").toUpperCase();
+			stype = json.getString("event").toUpperCase();
 			String[] stypes = stype.split(" ");
 			type = EventType.valueOf(String.join("_", stypes));
 		} catch (IllegalArgumentException e) {
+			System.out.println(stype);
 			// To avoid bloc code if we receive a not defined status
 			type = EventType.UNKNOWN;
 		}
 		return new AnalyticsEventImpl(isLiveStream, sound, totalLength, position, quality, sessionId, videoPlayer,
-				isAdEnabled, contentAssetId, isFullScreen, timestamp, type);
+				isAdEnabled, contentAssetId, isFullScreen, timestamp, type, stype);
 	}
 
 	@Override
 	public Stream<AnalyticsEvent> analyticsEvents(String videoId)
 			throws VectorlyApiAuthorizationException, VectorlyApiException {
 		try {
-			URL url = new URL(String.format("%s%s%s", asString(apiAnalyticsUrl), ANALYTICS_EVENTS,
-					URLEncoder.encode(videoId, "UTF-8")));
-			return httpCall(url, content -> {
+			return httpCall(config.getAnalyticsEventsUrl(videoId), content -> {
 				JSONArray jsonArr = new JSONArray(content);
 				Iterable<Object> itr = () -> jsonArr.iterator();
 				return StreamSupport.stream(itr.spliterator(), false).map(VectorlyRestImpl::eventFromJsonObject);
@@ -282,13 +254,8 @@ public class VectorlyRestImpl implements VectorlyRest {
 	}
 
 	@Override
-	public Uploader uploader(URL apiUploadUrl) {
-		return new TusUploaderImpl(apiUploadUrl, apiKey);
-	}
-
-	@Override
 	public Uploader uploader() throws MalformedURLException {
-		return uploader(apiUploadUrl);
+		return new TusProtocolUploaderImpl(config.getUploadUrl(), config.getApiKey(), config.getIsResumingEnabled());
 	}
 
 	@Override
@@ -298,6 +265,10 @@ public class VectorlyRestImpl implements VectorlyRest {
 
 	@Override
 	public SecuredUrl secured(String videoId, LocalDateTime expiresAt) throws VectorlyApiException {
-		return (new JWTSecuredUrlImpl(apiKey, apiUrl)).generate(videoId, expiresAt);
+		try {
+			return (new JWTSecuredUrlImpl(config.getApiKey(), config.getApiUrl())).generate(videoId, expiresAt);
+		} catch (MalformedURLException e) {
+			throw new VectorlyApiException(e);
+		}
 	}
 }

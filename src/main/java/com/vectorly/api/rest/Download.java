@@ -5,6 +5,14 @@ import java.nio.file.Path;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
 
+/**
+ * Download and save the file to a local file relative to the "destinationFolder"
+ * 
+ * Here is where the download job will be done
+ * 
+ * @author NOUNI EL Bachir
+ *
+ */
 public interface Download {
 
 	/**
@@ -34,7 +42,7 @@ public interface Download {
 
 	/**
 	 * 
-	 * @author HP
+	 * @author NOUNI EL Bachir
 	 *
 	 */
 	public static interface DownloadListener {
@@ -53,7 +61,7 @@ public interface Download {
 
 		/**
 		 * 
-		 * @author HP
+		 * @author NOUNI EL Bachir
 		 *
 		 */
 		public static class Progress {
@@ -83,7 +91,7 @@ public interface Download {
 
 		/**
 		 * 
-		 * @author HP
+		 * @author NOUNI El Bachir
 		 *
 		 */
 		public static class Downloaded {

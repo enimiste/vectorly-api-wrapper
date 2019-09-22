@@ -7,23 +7,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vectorly.api.rest.Download;
 import com.vectorly.api.rest.Download.DownloadListener;
+import com.vectorly.api.rest.DownloadStream;
 import com.vectorly.api.rest.DownloadStream.DownloadStreamListener;
+import com.vectorly.api.rest.Upload;
 import com.vectorly.api.rest.Upload.UploadListener;
-import com.vectorly.api.rest.*;
+import com.vectorly.api.rest.Uploader;
+import com.vectorly.api.rest.VectorlyRest;
 import com.vectorly.api.rest.dto.AnalyticsEvent;
 import com.vectorly.api.rest.dto.SecuredUrl;
 import com.vectorly.api.rest.dto.Summary;
 import com.vectorly.api.rest.dto.Video;
 import com.vectorly.api.rest.dto.Video.VideoStatus;
+import com.vectorly.api.rest.exception.FileTypeNotSupportedException;
 import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
+import com.vectorly.api.rest.impl.VectorlyRestBuilder;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			VectorlyRest rest = VectorlyRest.build("1ce9d977-7baa-4b98-be65-9135fff3164e");
+			VectorlyRest rest = VectorlyRestBuilder.build("1ce9d977-7baa-4b98-be65-9135fff3164e");
 
 			// Uploading
 			Uploader uper = rest.uploader();
@@ -103,6 +109,9 @@ public class Main {
 		} catch (VectorlyApiAuthorizationException vaae) {
 			System.err.println("Autorization error to Vectorly API");
 			vaae.printStackTrace();
+		}  catch (FileTypeNotSupportedException fnse) {
+			System.err.println("You tried to upload a not supported file : " + fnse.getFilename());
+			fnse.printStackTrace();
 		} catch (VectorlyApiException vae) {
 			System.err.println("Vectorly Api lib error");
 			vae.printStackTrace();
