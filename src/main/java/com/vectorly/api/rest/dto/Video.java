@@ -48,8 +48,8 @@ public interface Video {
 	String toString();
 
 	public static enum VideoStatus {
-		READY, PROCESSING, ERROR, UPLOADING, UNKNOWN,// UNKNOWN is used when we receive an unknown status for this
-														// library
+		READY, PROCESSING, ERROR, UPLOADING, UPLOAD_STALLED, UNKNOWN,
+		// UNKNOWN is used when we receive an unknown status for this library
 	}
 
 }
