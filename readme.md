@@ -176,7 +176,7 @@ String id;
 String name;
 Long size;
 Long originalSize;
-VideoStatus status (READY, PROCESSING, ERROR, UNKNOWN);
+VideoStatus status (READY, PROCESSING, UPLOADING, UPLOAD_STALLED, ERROR, UNKNOWN);
 String rawStatus;//Raw status without mapping with the VideoStatus
 Boolean isPrivate;
 String clientId;
@@ -209,7 +209,7 @@ isAdEnabled;
 String contentAssetId;
 isFullScreen;
 LocalDateTime timestamp;
-EventType type (VIDEO_SEEK, VIDEO_PAUSE, VIDEO_END, VIDEO_BUFFER_END, VIDEO_BUFFER_START, VIDEO_LOAD, UNKNOWN);
+EventType type (VIDEO_PLAY, VIDEO_SEEK, VIDEO_PAUSE, VIDEO_END, VIDEO_BUFFER_END, VIDEO_BUFFER_START, VIDEO_LOAD, UNKNOWN);
 String rawType;//event type without mapping with the Enum EventType
 ```
 ## Credits :
