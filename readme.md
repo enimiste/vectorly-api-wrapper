@@ -78,7 +78,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		try {
 			VectorlyRest rest = VectorlyRestBuilder
-					.build("1ce9d977-7baa-4b98-be65-9135fff3164e");
+					.build("API KEY HERE");
 
 			// Uploading
 			Uploader uper = rest.uploader();
