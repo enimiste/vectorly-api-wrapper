@@ -1,0 +1,5 @@
+
+com.vectorly.api.rest
+com.vectorly.api.rest.dto
+com.vectorly.api.rest.exception
+com.vectorly.api.rest.impl

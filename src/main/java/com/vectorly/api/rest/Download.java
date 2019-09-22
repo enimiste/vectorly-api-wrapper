@@ -6,7 +6,8 @@ import com.vectorly.api.rest.exception.VectorlyApiAuthorizationException;
 import com.vectorly.api.rest.exception.VectorlyApiException;
 
 /**
- * Download and save the file to a local file relative to the "destinationFolder"
+ * Download and save the file to a local file relative to the
+ * "destinationFolder"
  * 
  * Here is where the download job will be done
  * 

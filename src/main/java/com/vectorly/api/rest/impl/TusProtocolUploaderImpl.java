@@ -31,10 +31,10 @@ class TusProtocolUploaderImpl implements Uploader {
 	}
 
 	@Override
-	public Upload upload(File file)  throws FileTypeNotSupportedException{
+	public Upload upload(File file) throws FileTypeNotSupportedException {
 		if (!file.toPath().toString().endsWith(".mp4"))
 			throw (new FileTypeNotSupportedException("Only MP4 files are supported")).setFilename(file.getName());
-		
+
 		return new TusProtocolUploadImpl(tusClient, apiKey, file, VideoType.VIDEO_MP4);
 	}
 

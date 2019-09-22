@@ -15,7 +15,8 @@ class SummaryImpl implements Summary {
 
 	public SummaryImpl(LocalDateTime start, LocalDateTime end, Integer playsCount, Set<Detail> details) {
 		super();
-		if(end == null || start == null) throw new IllegalArgumentException("Start and end times should not be null");
+		if (end == null || start == null)
+			throw new IllegalArgumentException("Start and end times should not be null");
 		this.start = start;
 		this.end = end;
 		this.playsCount = playsCount;

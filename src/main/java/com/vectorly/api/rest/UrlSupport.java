@@ -9,7 +9,7 @@ import java.net.URL;
  */
 public final class UrlSupport {
 	/**
-	 * Return a string representation of the {@see URL} without the trailing slashs
+	 * Return a string representation of the URL without the trailing slashs
 	 * 
 	 * @param url
 	 * @return

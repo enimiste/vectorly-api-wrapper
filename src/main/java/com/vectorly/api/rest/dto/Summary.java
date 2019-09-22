@@ -32,6 +32,7 @@ public interface Summary {
 
 	/**
 	 * Summary(start=%s, end=%s, plays=%d, details=%s)
+	 * 
 	 * @return
 	 */
 	String toString();
@@ -72,6 +73,7 @@ public interface Summary {
 
 		/**
 		 * Detail(id=%s, title=%s, plays=%d)
+		 * 
 		 * @return
 		 */
 		String toString();

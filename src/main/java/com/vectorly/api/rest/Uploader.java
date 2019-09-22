@@ -12,11 +12,12 @@ import com.vectorly.api.rest.exception.FileTypeNotSupportedException;
 public interface Uploader {
 
 	/**
-	 * Builds a Upload object that will be executed by the caller
-	 * This method should not run any query against the Vectorly Api
+	 * Builds a Upload object that will be executed by the caller This method should
+	 * not run any query against the Vectorly Api
 	 * 
 	 * @param file The path to the file to be uploaded
 	 * @return
+	 * @throws FileTypeNotSupportedException
 	 */
 	Upload upload(File file) throws FileTypeNotSupportedException;
 

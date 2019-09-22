@@ -47,6 +47,7 @@ public interface VectorlyRest {
 	 * 
 	 * @param videoId
 	 * @return
+	 * @throws VectorlyApiException
 	 */
 	Download download(String videoId) throws VectorlyApiException;
 
@@ -57,6 +58,7 @@ public interface VectorlyRest {
 	 * 
 	 * @param id
 	 * @return
+	 * @throws VectorlyApiException
 	 */
 	DownloadStream downloadAsStream(String id) throws VectorlyApiException;
 
@@ -144,6 +146,7 @@ public interface VectorlyRest {
 		/**
 		 * 
 		 * @return
+		 * @throws MalformedURLException
 		 */
 		default URL getUploadUrl() throws MalformedURLException {
 			return new URL("https://tus.vectorly.io/files/");
@@ -152,6 +155,7 @@ public interface VectorlyRest {
 		/**
 		 * 
 		 * @return
+		 * @throws MalformedURLException
 		 */
 		default URL getApiUrl() throws MalformedURLException {
 			return new URL("https://api.vectorly.io/videos/");
@@ -160,6 +164,7 @@ public interface VectorlyRest {
 		/**
 		 * 
 		 * @return
+		 * @throws MalformedURLException
 		 */
 		default URL getAnalyticsUrl() throws MalformedURLException {
 			return new URL("https://api.vectorly.io/analytics/");
@@ -197,7 +202,7 @@ public interface VectorlyRest {
 			return "X-Api-Key";
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @author NOUNI EL Bachir

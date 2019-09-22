@@ -6,7 +6,7 @@ import com.vectorly.api.rest.VectorlyRest;
 import com.vectorly.api.rest.VectorlyRest.Configuration;
 
 /**
- * This is a facade class to get an implementation of the {@see VectorlyRest}
+ * This is a facade class to get an implementation of the VectorlyRest
  * interface
  * 
  * @author HP
@@ -17,9 +17,8 @@ public final class VectorlyRestBuilder {
 	 * 
 	 * @param apiKey
 	 * @return
-	 * @throws MalformedURLException
 	 */
-	public static VectorlyRest build(String apiKey) throws MalformedURLException {
+	public static VectorlyRest build(String apiKey) {
 		return build(new ConfigurationImpl().setApiKey(apiKey));
 	}
 
@@ -28,7 +27,6 @@ public final class VectorlyRestBuilder {
 	 * @param apiKey
 	 * @param apiFilesUrl
 	 * @return
-	 * @throws MalformedURLException
 	 */
 	public static VectorlyRest build(Configuration config) {
 		return new VectorlyRestImpl(config);

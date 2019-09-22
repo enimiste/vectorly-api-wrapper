@@ -13,8 +13,8 @@ import com.vectorly.api.rest.exception.VectorlyApiException;
 public interface Upload {
 
 	/**
-	 * Sets a custom name to be used to name the uploaded file on Vectorly Api
-	 * The fileName should include the same extension as the source file
+	 * Sets a custom name to be used to name the uploaded file on Vectorly Api The
+	 * fileName should include the same extension as the source file
 	 * 
 	 * @param fileName
 	 * @throws IllegalArgumentException if the file name is invalid
@@ -50,7 +50,7 @@ public interface Upload {
 
 		/**
 		 * 
-		 * @param url
+		 * @param uploaded
 		 */
 		void onFinished(Uploaded uploaded);
 
