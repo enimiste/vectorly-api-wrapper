@@ -30,7 +30,7 @@ public class FileTypeNotSupportedException extends VectorlyApiException {
 
 	/**
 	 * 
-	 * @return
+	 * @return the filename that causes this exception
 	 */
 	public String getFilename() {
 		return filename;
@@ -38,8 +38,8 @@ public class FileTypeNotSupportedException extends VectorlyApiException {
 
 	/**
 	 * 
-	 * @param value
-	 * @return
+	 * @param value the filename
+	 * @return the same instance to enable chaining
 	 */
 	public FileTypeNotSupportedException setFilename(String value) {
 		this.filename = value;

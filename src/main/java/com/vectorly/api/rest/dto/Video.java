@@ -3,61 +3,47 @@ package com.vectorly.api.rest.dto;
 public interface Video {
 
 	/**
-	 * Returns the mapped value of the video status with one of the
-	 * VideoStatus enum If not listed in enums, this method returns
-	 * VideoStatus.UNKNOWN To get the original raw value use
-	 * Video.getRawStatus() method
+	 * Returns the mapped value of the video status with one of the VideoStatus enum
+	 * If not listed in enums, this method returns VideoStatus.UNKNOWN To get the
+	 * original raw value use Video.getRawStatus() method
 	 * 
-	 * @return
+	 * @return Video status
 	 */
 	VideoStatus getStatus();
 
 	/**
-	 * Returns the original raw value of the video status attribute received from
-	 * Vectorly API
-	 * 
-	 * @return
+	 * @return the original raw value of the video status attribute received from
+	 *         Vectorly API
 	 */
 	String getRawType();
 
 	/**
 	 * 
-	 * @return
+	 * @return videoId
 	 */
 	String getId();
 
 	/**
-	 * Original Size in Bytes
-	 * 
-	 * @return
+	 * @return Original Size in Bytes
 	 */
 	Long getOriginalSize();
 
 	/**
-	 * Compressed Size in Bytes
-	 * 
-	 * @return
+	 * @return Compressed Size in Bytes
 	 */
 	Long getSize();
 
-	/**
-	 * 
-	 * @return
-	 */
 	Boolean getIsPrivate();
 
 	/**
-	 * Email
-	 * 
-	 * @return
+	 * @return Email
 	 */
 	String getClientId();
 
 	/**
-	 * Video(id=%s, name=%s, status=%s, csize=%d Bytes, orsize=%d Bytes, private=%b,
-	 * clientId=%s)
 	 * 
-	 * @return
+	 * @return Video(id=%s, name=%s, status=%s, csize=%d Bytes, orsize=%d Bytes,
+	 *         private=%b, clientId=%s)
 	 */
 	String toString();
 

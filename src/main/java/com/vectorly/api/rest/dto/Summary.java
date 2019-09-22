@@ -17,64 +17,44 @@ public interface Summary {
 	 */
 	LocalDateTime getEnd();
 
-	/**
-	 * 
-	 * @return
-	 */
 	Integer getPlaysCount();
 
 	/**
 	 * Details by videos
 	 * 
-	 * @return
+	 * @return a set of details
 	 */
 	Set<Detail> getDetails();
 
 	/**
-	 * Summary(start=%s, end=%s, plays=%d, details=%s)
 	 * 
-	 * @return
+	 * @return Summary(start=%s, end=%s, plays=%d, details=%s)
 	 */
 	String toString();
 
 	public static interface Detail {
-		/**
-		 * 
-		 * @return
-		 */
 		String getVideoId();
 
-		/**
-		 * 
-		 * @return
-		 */
 		String getVideoTitle();
 
-		/**
-		 * 
-		 * @return
-		 */
 		Integer getPlaysCount();
 
 		/**
-		 * Two Detail objects are same if they have the same videId
+		 * Two Detail objects are same if they have the same videoId
 		 * 
-		 * @param obj
-		 * @return
+		 * @param obj another detail object
+		 * @return true if the two objects has the same videoId
 		 */
 		boolean equals(Object obj);
 
 		/**
-		 * Two Detail objects are same if they have the same videId
 		 * 
-		 * @return
+		 * @return videoId.hashCode();
 		 */
 		int hashCode();
 
 		/**
-		 * Detail(id=%s, title=%s, plays=%d)
-		 * 
-		 * @return
+		 * @return Detail(id=%s, title=%s, plays=%d)
 		 */
 		String toString();
 	}

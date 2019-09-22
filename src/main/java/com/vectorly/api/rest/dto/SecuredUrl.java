@@ -19,7 +19,7 @@ public interface SecuredUrl {
 	 * 
 	 * Should be a shortcut to getUrl().toString()
 	 * 
-	 * @return
+	 * @return the url to be embedd in iframes
 	 */
 	String toString();
 }

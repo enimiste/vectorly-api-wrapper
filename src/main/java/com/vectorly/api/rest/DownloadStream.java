@@ -20,9 +20,9 @@ public interface DownloadStream {
 	 * Write the downloaded file into the output stream This method closes the
 	 * output stream after the success of the operation
 	 * 
-	 * @param out
-	 * @throws VectorlyApiAuthorizationException
-	 * @throws VectorlyApiException
+	 * @param out to writes to the input bytes
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exceptions
 	 */
 	void execute(OutputStream out) throws VectorlyApiAuthorizationException, VectorlyApiException;
 
@@ -32,15 +32,8 @@ public interface DownloadStream {
 	 *
 	 */
 	public static interface DownloadStreamListener {
-		/**
-		 * 
-		 * @param value
-		 */
 		void onProgress(Progress value);
 
-		/**
-		 * 
-		 */
 		void onFinished();
 
 		/**

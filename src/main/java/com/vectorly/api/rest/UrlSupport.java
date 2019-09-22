@@ -9,10 +9,8 @@ import java.net.URL;
  */
 public final class UrlSupport {
 	/**
-	 * Return a string representation of the URL without the trailing slashs
-	 * 
-	 * @param url
-	 * @return
+	 * @param url url to be converted
+	 * @return string representation of the URL without the trailing slashs
 	 */
 	public static String removeTrailingSlash(URL url) {
 		return url.toString().replaceAll("/+$", "");

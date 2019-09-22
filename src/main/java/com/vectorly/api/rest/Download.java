@@ -15,30 +15,22 @@ import com.vectorly.api.rest.exception.VectorlyApiException;
  *
  */
 public interface Download {
-
-	/**
-	 * 
-	 */
 	String getVideoId();
 
 	/**
 	 * The file name is the [videoId].mp4
 	 * 
-	 * @param file
+	 * @param file the output folder
 	 */
 	void setDestinationFolder(File file);
 
 	/**
 	 * 
-	 * @throws VectorlyApiException
-	 * @throws VectorlyApiAuthorizationException
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exception
 	 */
 	void execute() throws VectorlyApiAuthorizationException, VectorlyApiException;
 
-	/**
-	 * 
-	 * @param listener
-	 */
 	void addDownloadListener(DownloadListener listener);
 
 	/**
@@ -48,16 +40,8 @@ public interface Download {
 	 */
 	public static interface DownloadListener {
 
-		/**
-		 * 
-		 * @param value
-		 */
 		void onProgress(Progress value);
 
-		/**
-		 * 
-		 * @param download
-		 */
 		void onFinished(Downloaded download);
 
 		/**

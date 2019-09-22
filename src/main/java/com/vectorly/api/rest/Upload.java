@@ -16,47 +16,34 @@ public interface Upload {
 	 * Sets a custom name to be used to name the uploaded file on Vectorly Api The
 	 * fileName should include the same extension as the source file
 	 * 
-	 * @param fileName
+	 * @param fileName new filename
 	 * @throws IllegalArgumentException if the file name is invalid
 	 */
 	void setCustomName(String fileName) throws IllegalArgumentException;
 
-	/**
-	 * 
-	 * @param listener
-	 */
 	void addUploadListener(UploadListener listener);
 
 	/**
 	 * 
-	 * @throws FileNotFoundException
-	 * @throws VectorlyApiAuthorizationException
-	 * @throws VectorlyApiException
+	 * @throws FileNotFoundException             file to upload not found
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exceptions
 	 */
 	void execute() throws FileNotFoundException, VectorlyApiAuthorizationException, VectorlyApiException;
 
 	/**
 	 * 
-	 * @author HP
+	 * @author NOUNI EL bachir
 	 *
 	 */
 	public static interface UploadListener {
-
-		/**
-		 * 
-		 * @param value
-		 */
 		void onProgress(Progress value);
 
-		/**
-		 * 
-		 * @param uploaded
-		 */
 		void onFinished(Uploaded uploaded);
 
 		/**
 		 * 
-		 * @author HP
+		 * @author NOUNI EL bachir
 		 *
 		 */
 		public static class Progress {
@@ -86,7 +73,7 @@ public interface Upload {
 
 		/**
 		 * 
-		 * @author HP
+		 * @author NOUNI EL bachir
 		 *
 		 */
 		public static class Uploaded {

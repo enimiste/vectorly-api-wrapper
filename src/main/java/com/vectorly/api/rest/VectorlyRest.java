@@ -1,5 +1,6 @@
 package com.vectorly.api.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -21,11 +22,17 @@ import com.vectorly.api.rest.exception.VectorlyApiException;
 public interface VectorlyRest {
 
 	/**
+	 * 
+	 * @return the configuration used to build this object
+	 */
+	Configuration getConfig();
+
+	/**
 	 * Fetch all videos from the Vectorly API and return it as a stream
 	 * 
-	 * @return
-	 * @throws VectorlyApiAuthorizationException
-	 * @throws VectorlyApiException
+	 * @return All videos
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exceptions
 	 */
 	Stream<Video> fetchAll() throws VectorlyApiAuthorizationException, VectorlyApiException;
 
@@ -33,10 +40,10 @@ public interface VectorlyRest {
 	 * Fetch videos having the keyword in their title from the Vectorly API and
 	 * return it as a stream
 	 * 
-	 * @param keyword
-	 * @return
-	 * @throws VectorlyApiAuthorizationException
-	 * @throws VectorlyApiException
+	 * @param keyword Video Title
+	 * @return Search result
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exceptions
 	 */
 	Stream<Video> search(String keyword) throws VectorlyApiAuthorizationException, VectorlyApiException;
 
@@ -45,9 +52,9 @@ public interface VectorlyRest {
 	 * any query against the Vectorly API. The execution should be handled by the
 	 * implementing class of Download interface
 	 * 
-	 * @param videoId
-	 * @return
-	 * @throws VectorlyApiException
+	 * @param videoId Video Id
+	 * @return object representing the Download
+	 * @throws VectorlyApiException Wrap other exceptions
 	 */
 	Download download(String videoId) throws VectorlyApiException;
 
@@ -56,29 +63,29 @@ public interface VectorlyRest {
 	 * execute any query against the Vectorly API. The execution should be handled
 	 * by the implementing class of DownloadStream interface
 	 * 
-	 * @param id
-	 * @return
-	 * @throws VectorlyApiException
+	 * @param videoId Video Id
+	 * @return object representing the DownloadStream
+	 * @throws VectorlyApiException Wrap other exceptions
 	 */
-	DownloadStream downloadAsStream(String id) throws VectorlyApiException;
+	DownloadStream downloadAsStream(String videoId) throws VectorlyApiException;
 
 	/**
 	 * Fetch videos analytics summary from the Vectorly API and return it as a
 	 * stream
 	 * 
-	 * @return
-	 * @throws VectorlyApiAuthorizationException
-	 * @throws VectorlyApiException
+	 * @return videos analytics summary
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exceptions
 	 */
 	Stream<Summary> analyticsSummary() throws VectorlyApiAuthorizationException, VectorlyApiException;
 
 	/**
 	 * Fetch videos analytics events from the Vectorly API and return it as a stream
 	 * 
-	 * @param videoId
-	 * @return
-	 * @throws VectorlyApiAuthorizationException
-	 * @throws VectorlyApiException
+	 * @param videoId VideoId
+	 * @return videos analytics events
+	 * @throws VectorlyApiAuthorizationException Forbidden or UnAuthorized case
+	 * @throws VectorlyApiException              Wrap other exceptions
 	 */
 	Stream<AnalyticsEvent> analyticsEvents(String videoId)
 			throws VectorlyApiAuthorizationException, VectorlyApiException;
@@ -88,9 +95,10 @@ public interface VectorlyRest {
 	 * any query against the Vectorly API. Example of Uploader : TusUploaderImpl
 	 * that uses the TUS protocol
 	 * 
-	 * Only MP4 videos are supported
+	 * Only MP4 videos are supported until now
 	 * 
-	 * @return
+	 * @return object representing the Uploader
+	 * @throws MalformedURLException Url building error
 	 */
 	Uploader uploader() throws MalformedURLException;
 
@@ -98,17 +106,19 @@ public interface VectorlyRest {
 	 * Return a secured URL to use to embed a private video, Default expiration time
 	 * is 10 minutes
 	 * 
-	 * @param videoId
-	 * @return
+	 * @param videoId Video Id
+	 * @return secured URL to use to embed
+	 * @throws VectorlyApiException Wrap other exceptions
 	 */
 	SecuredUrl secured(String videoId) throws VectorlyApiException;
 
 	/**
 	 * Return a secured URL to use to embed a private video
 	 * 
-	 * @param videoId
-	 * @param expiresAt
-	 * @return
+	 * @param videoId   Video Id
+	 * @param expiresAt expiration time
+	 * @return secured URL to use to embed
+	 * @throws VectorlyApiException Wrap other exceptions
 	 */
 	SecuredUrl secured(String videoId, LocalDateTime expiresAt) throws VectorlyApiException;
 
@@ -119,85 +129,150 @@ public interface VectorlyRest {
 	 */
 	public static interface Configuration {
 
-		/**
-		 * 
-		 * @return
-		 */
 		String getApiKey();
 
 		/**
-		 * @param key
-		 * @return {@link Configuration} for chaining calls
+		 * @param key secret key
+		 * @return {@link Configuration} same instance for chaining calls
 		 */
 		Configuration setApiKey(String key);
 
-		/**
-		 * 
-		 * @return
-		 */
 		Boolean getIsResumingEnabled();
 
 		/**
-		 * @param enabled
-		 * @return {@link Configuration} for chaining calls
+		 * @param enabled true to enable resuming; otherwise false
+		 * @return {@link Configuration} same instance for chaining calls
 		 */
 		Configuration setIsResumingEnabled(Boolean enabled);
 
 		/**
+		 * Default to : "https://tus.vectorly.io/files/"
 		 * 
-		 * @return
-		 * @throws MalformedURLException
+		 * @return The url to which will be uploaded the video files
+		 * @throws IllegalStateException if any error happens when building the url
 		 */
-		default URL getUploadUrl() throws MalformedURLException {
-			return new URL("https://tus.vectorly.io/files/");
+		default URL getUploadUrl() throws IllegalStateException {
+			try {
+				return new URL("https://tus.vectorly.io/files/");
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
 		/**
+		 * Default to : "https://api.vectorly.io/videos/"
 		 * 
-		 * @return
-		 * @throws MalformedURLException
+		 * @return The base url to be prepended to other Uri to fetch data (videos,
+		 *         search, ..)
+		 * @throws IllegalStateException if any error happens when building the url
 		 */
-		default URL getApiUrl() throws MalformedURLException {
-			return new URL("https://api.vectorly.io/videos/");
+		default URL getApiUrl() throws IllegalStateException {
+			try {
+				return new URL("https://api.vectorly.io/videos/");
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
 		/**
+		 * Default to : "https://api.vectorly.io/analytics/"
 		 * 
-		 * @return
-		 * @throws MalformedURLException
+		 * @return The base url for analytics uri
+		 * @throws IllegalStateException if any error happens when building the url
 		 */
-		default URL getAnalyticsUrl() throws MalformedURLException {
-			return new URL("https://api.vectorly.io/analytics/");
+		default URL getAnalyticsUrl() throws IllegalStateException {
+			try {
+				return new URL("https://api.vectorly.io/analytics/");
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
 		/**
+		 * Build the full Url to get videos list. Default to [apiUrl]/list
 		 * 
-		 * @return
-		 * @throws MalformedURLException
+		 * @return Url to get videos list
+		 * @throws IllegalStateException if any error happens when building the url
 		 */
-		default URL getVideosListUrl() throws MalformedURLException {
-			return new URL(String.format("%s%s", UrlSupport.removeTrailingSlash(getApiUrl()), "/list"));
+		default URL getVideosListUrl() throws IllegalStateException {
+			try {
+				return new URL(String.format("%s%s", UrlSupport.removeTrailingSlash(getApiUrl()), "/list"));
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
-		default URL getVideosSearchUrl(String keyword) throws MalformedURLException, Exception {
-			return new URL(String.format("%s%s%s", UrlSupport.removeTrailingSlash(getApiUrl()), "/search/",
-					URLEncoder.encode(keyword, "UTF-8")));
+		/**
+		 * Build the full Url to search videos. Default to [apiUrl]/search/[keyword]
+		 * 
+		 * @param keyword video title
+		 * @return Url to search videos by title
+		 * @throws IllegalStateException if any error happens when building the url
+		 */
+		default URL getVideosSearchUrl(String keyword) throws IllegalStateException {
+			try {
+				return new URL(String.format("%s%s%s", UrlSupport.removeTrailingSlash(getApiUrl()), "/search/",
+						URLEncoder.encode(keyword, "UTF-8")));
+			} catch (MalformedURLException | UnsupportedEncodingException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
-		default URL getVideoDownloadUrl(String videoId) throws MalformedURLException, Exception {
-			return new URL(String.format("%s%s%s", UrlSupport.removeTrailingSlash(getApiUrl()), "/download/",
-					URLEncoder.encode(videoId, "UTF-8")));
+		/**
+		 * Build the full Url to download a given video. Default to
+		 * [apiUrl]/download/[videoId]
+		 * 
+		 * @param videoId Video Id
+		 * @return url to download the file from
+		 * @throws IllegalStateException if any error happens when building the url
+		 */
+		default URL getVideoDownloadUrl(String videoId) throws IllegalStateException {
+			try {
+				return new URL(String.format("%s%s%s", UrlSupport.removeTrailingSlash(getApiUrl()), "/download/",
+						URLEncoder.encode(videoId, "UTF-8")));
+			} catch (MalformedURLException | UnsupportedEncodingException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
-		default URL getAnalyticsSummaryUrl() throws MalformedURLException {
-			return new URL(String.format("%s%s", UrlSupport.removeTrailingSlash(getAnalyticsUrl()), "/summary/"));
+		/**
+		 * Build the full Url to list videos summaries. Default to [apiUrl]/summary
+		 * 
+		 * @return Url to list all summaries
+		 * @throws IllegalStateException if any error happens when building the url
+		 */
+		default URL getAnalyticsSummaryUrl() throws IllegalStateException {
+			try {
+				return new URL(String.format("%s%s", UrlSupport.removeTrailingSlash(getAnalyticsUrl()), "/summary/"));
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
-		default URL getAnalyticsEventsUrl(String videoId) throws MalformedURLException, Exception {
-			return new URL(String.format("%s%s%s", UrlSupport.removeTrailingSlash(getAnalyticsUrl()), "/events/video/",
-					URLEncoder.encode(videoId, "UTF-8")));
+		/**
+		 * Build the full Url to list events of a given Video by its id. Default to
+		 * [apiUrl]/events/video/[videoId]
+		 * 
+		 * @param videoId Video id
+		 * @return Url to list events of the given videoId (Video play, pause, seek,
+		 *         ...)
+		 * @throws IllegalStateException if any error happens when building the url
+		 */
+		default URL getAnalyticsEventsUrl(String videoId) throws IllegalStateException {
+			try {
+				return new URL(String.format("%s%s%s", UrlSupport.removeTrailingSlash(getAnalyticsUrl()),
+						"/events/video/", URLEncoder.encode(videoId, "UTF-8")));
+			} catch (MalformedURLException | UnsupportedEncodingException e) {
+				throw new IllegalArgumentException(e);
+			}
 		}
 
+		/**
+		 * Default to "X-Api-Key"
+		 * 
+		 * @return The http request header on which the Api Key will be put to be
+		 *         authenticated
+		 */
 		default String getApiKeyRequestHeader() {
 			return "X-Api-Key";
 		}

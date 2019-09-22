@@ -267,8 +267,13 @@ class VectorlyRestImpl implements VectorlyRest {
 	public SecuredUrl secured(String videoId, LocalDateTime expiresAt) throws VectorlyApiException {
 		try {
 			return (new JWTSecuredUrlImpl(config.getApiKey(), config.getApiUrl())).generate(videoId, expiresAt);
-		} catch (MalformedURLException e) {
+		} catch (IllegalStateException e) {
 			throw new VectorlyApiException(e);
 		}
+	}
+
+	@Override
+	public Configuration getConfig() {
+		return config;
 	}
 }

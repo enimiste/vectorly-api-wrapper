@@ -3,94 +3,62 @@ package com.vectorly.api.rest.dto;
 import java.time.LocalDateTime;
 
 public interface AnalyticsEvent {
-	/**
-	 * 
-	 * @return
-	 */
 	Boolean getIsLiveStream();
 
-	/**
-	 * 
-	 * @return
-	 */
 	Integer getSound();
 
 	/**
 	 * 
-	 * @return
+	 * @return in Bytes
 	 */
 	Long getTotalLength();
 
-	/**
-	 * 
-	 * @return
-	 */
 	Integer getPosition();
 
 	/**
 	 * 
-	 * @return
+	 * @return ex "standard"
 	 */
 	String getQuality();
 
-	/**
-	 * 
-	 * @return
-	 */
 	String getSessionId();
 
-	/**
-	 * 
-	 * @return
-	 */
 	String getVideoPlayer();
 
-	/**
-	 * 
-	 * @return
-	 */
 	Boolean getAdEnabled();
 
 	/**
 	 * The video Id
 	 * 
-	 * @return
+	 * @return videoId
 	 */
 	String getContentAssetId();
 
-	/**
-	 * 
-	 * @return
-	 */
 	Boolean getIsFullScreen();
 
 	/**
 	 * 
-	 * @return
+	 * @return in GMT zone time
 	 */
 	LocalDateTime getTimestamp();
 
 	/**
-	 * Returns the mapped value of the event with one of the EventType enum
-	 * If not listed in enums, this method returns EventType.UNKNOWN To get
-	 * the original raw value use AnalyticsEvent.getRawType() method
+	 * Returns the mapped value of the event with one of the EventType enum If not
+	 * listed in enums, this method returns EventType.UNKNOWN To get the original
+	 * raw value use AnalyticsEvent.getRawType() method
 	 * 
-	 * @return
+	 * @return event type
 	 */
 	EventType getType();
 
 	/**
-	 * Returns the original raw value of the event attribute received from Vectorly
-	 * API
 	 * 
-	 * @return
+	 * @return original raw value of the event attribute received from Vectorly API
 	 */
 	String getRawType();
 
 	/**
-	 * Event(type=%s, time=%s, videoId=%s, player=%s, liveStream=%b)
-	 * 
-	 * @return
+	 * @return Event(type=%s, time=%s, videoId=%s, player=%s, liveStream=%b)
 	 */
 	String toString();
 
