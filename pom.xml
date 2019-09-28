@@ -7,6 +7,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Vectorly REST Api Wrapper</name>
 	<description>Vectorly REST Api Wrapper</description>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>io.tus.java.client</groupId>
@@ -36,13 +42,4 @@
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
-	<plugins>
-		<plugin>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<configuration>
-				<source>1.8</source>
-				<target>1.8</target>
-			</configuration>
-		</plugin>
-	</plugins>
 </project>
